@@ -1,128 +1,176 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>AI Health Predictor</title>
+<meta charset="UTF-8">
+<title>AI Health Assistant</title>
 
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            color: white;
-            text-align: center;
-            padding: 40px;
-        }
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
 
-        .container {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(12px);
-            border-radius: 20px;
-            padding: 30px;
-            width: 400px;
-            margin: auto;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
+/* Card */
+.container {
+    width: 420px;
+    padding: 30px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    text-align: center;
+}
 
-        h1 {
-            margin-bottom: 20px;
-        }
+/* Heading */
+h1 {
+    margin-bottom: 10px;
+}
 
-        input {
-            width: 90%;
-            padding: 12px;
-            margin: 10px;
-            border-radius: 10px;
-            border: none;
-            outline: none;
-        }
+/* Input */
+input {
+    width: 90%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+}
 
-        button {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 10px;
-            background: #ff7eb3;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+/* Button */
+button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 10px;
+    background: #ff7eb3;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
 
-        button:hover {
-            background: #ff4e8a;
-        }
+button:hover {
+    background: #ff4e8a;
+}
 
-        .results {
-            margin-top: 20px;
-            background: rgba(0,0,0,0.2);
-            padding: 15px;
-            border-radius: 15px;
-        }
+/* Tags */
+.tags {
+    margin-top: 10px;
+}
 
-        .tag {
-            background: #ffffff33;
-            padding: 5px 10px;
-            border-radius: 8px;
-            margin: 5px;
-            display: inline-block;
-        }
+.tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    padding: 6px 10px;
+    margin: 5px;
+    border-radius: 10px;
+}
 
-        .severity {
-            font-size: 18px;
-            margin-top: 10px;
-        }
+/* Results */
+.result-box {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 15px;
+    background: rgba(0,0,0,0.3);
+}
 
-        .advice {
-            margin-top: 10px;
-            font-weight: bold;
-        }
+.result-item {
+    margin: 5px 0;
+    font-size: 16px;
+}
 
-        .error {
-            color: #ffcccc;
-            margin-top: 10px;
-        }
-    </style>
+.severity {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.advice {
+    margin-top: 10px;
+    color: #ffeaa7;
+}
+
+/* Error */
+.error {
+    color: #ff7675;
+}
+</style>
+
 </head>
 
 <body>
 
 <div class="container">
 
-    <h1>🩺 AI Health Predictor</h1>
+<h1>🩺 AI Health Assistant</h1>
+<p>Enter your symptoms</p>
 
-    <form action="/predict" method="post">
-        <input type="text" name="symptoms" placeholder="e.g. fever cough headache" required>
+<form action="/predict" method="post" id="form">
 
-        <input type="number" step="0.1" name="temperature" placeholder="Temperature (°F)" required>
+<input type="text" id="symptomsInput" name="symptoms"
+placeholder="e.g. fever cough headache" required>
 
-        <input type="number" name="heart_rate" placeholder="Heart Rate (bpm)" required>
+<div class="tags" id="tagsContainer"></div>
 
-        <button type="submit">Predict</button>
-    </form>
+<input type="number" step="0.1" name="temperature"
+placeholder="Temperature (°F)" required>
 
-    {% if prediction %}
-    <div class="results">
-        <h2>🧠 Possible Conditions</h2>
+<input type="number" name="heart_rate"
+placeholder="Heart Rate (bpm)" required>
 
-        {% for p in prediction %}
-            <div class="tag">{{ p }}</div>
-        {% endfor %}
+<button type="submit">Predict</button>
 
-        <div class="severity">
-            <strong>Severity:</strong> {{ severity }}
-        </div>
+</form>
 
-        <div class="advice">
-            {{ advice }}
-        </div>
+{% if prediction %}
+<div class="result-box">
+    <h3>🧠 Possible Conditions</h3>
+
+    {% for p in prediction %}
+        <div class="result-item">{{ p }}</div>
+    {% endfor %}
+
+    <div class="severity">
+        Severity: {{ severity }}
     </div>
-    {% endif %}
 
-    {% if error %}
-        <div class="error">
-            Error: {{ error }}
-        </div>
-    {% endif %}
+    <div class="advice">
+        {{ advice }}
+    </div>
+</div>
+{% endif %}
+
+{% if error %}
+<div class="error">
+    {{ error }}
+</div>
+{% endif %}
 
 </div>
+
+<script>
+// Dynamic tag system
+const input = document.getElementById("symptomsInput");
+const container = document.getElementById("tagsContainer");
+
+input.addEventListener("input", () => {
+    const words = input.value.split(" ");
+    container.innerHTML = "";
+
+    words.forEach(word => {
+        if (word.trim() !== "") {
+            const tag = document.createElement("span");
+            tag.className = "tag";
+            tag.textContent = word;
+            container.appendChild(tag);
+        }
+    });
+});
+</script>
 
 </body>
 </html>
