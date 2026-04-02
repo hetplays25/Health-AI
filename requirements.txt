@@ -1,0 +1,4 @@
+flask
+pandas
+scikit-learn
+gunicorn  # Required for production deployment on Render/Railway

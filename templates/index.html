@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Health Predictor</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 30px;
+            width: 400px;
+            margin: auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 90%;
+            padding: 12px;
+            margin: 10px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            background: #ff7eb3;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #ff4e8a;
+        }
+
+        .results {
+            margin-top: 20px;
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .tag {
+            background: #ffffff33;
+            padding: 5px 10px;
+            border-radius: 8px;
+            margin: 5px;
+            display: inline-block;
+        }
+
+        .severity {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        .advice {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .error {
+            color: #ffcccc;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🩺 AI Health Predictor</h1>
+
+    <form action="/predict" method="post">
+        <input type="text" name="symptoms" placeholder="e.g. fever cough headache" required>
+
+        <input type="number" step="0.1" name="temperature" placeholder="Temperature (°F)" required>
+
+        <input type="number" name="heart_rate" placeholder="Heart Rate (bpm)" required>
+
+        <button type="submit">Predict</button>
+    </form>
+
+    {% if prediction %}
+    <div class="results">
+        <h2>🧠 Possible Conditions</h2>
+
+        {% for p in prediction %}
+            <div class="tag">{{ p }}</div>
+        {% endfor %}
+
+        <div class="severity">
+            <strong>Severity:</strong> {{ severity }}
+        </div>
+
+        <div class="advice">
+            {{ advice }}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if error %}
+        <div class="error">
+            Error: {{ error }}
+        </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
